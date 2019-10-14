@@ -1,0 +1,103 @@
+
+h1{
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Roboto Mono', monospace;
+    margin:0;
+
+}
+
+h3{
+    font-family: 'Roboto Mono', monospace;
+    font-size:14pt;
+}
+
+p{
+    font-family: 'Open Sans';
+    font-weight:lighter;
+}
+
+.scene{
+    height:100vh;
+    width:100%;
+    position:fixed;
+    z-index: -1;
+}
+
+.document{
+    color:white;
+    width:100%;
+    font-family: 'Source Code Variable';
+}
+
+.introductionContainer{
+    width:100%;
+    height:100vh;
+    display:flex;
+
+}
+
+.introduction{
+    width: 30%;
+    justify-self: center;
+    align-self:center;
+    margin:0 auto;
+}
+
+.scrollPrompt{
+    position:absolute;
+    /* background:white; */
+    width:100px;
+    height:100px;
+    left: calc(50% - 50px);
+    bottom:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    font-family: 'Open Sans';
+    font-weight:lighter;
+}
+
+.scrollContainer{
+    height:80px;
+    width:1px;
+    background:rgba(255,255,255,0);
+    margin-bottom:10px;
+    position: relative;
+}
+
+.scrollPoint {
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    animation: scroll 3s ease-in-out infinite;
+    border-radius:1px;
+}
+
+.h3Container{
+    font-family: 'Roboto Mono', monospace !important;
+    font-size:14pt;
+}
+
+.projectsContainer{
+    height:100vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+@keyframes scroll{
+    0% {
+        top:0;
+        opacity:0;
+    } 50% {
+        opacity:1;
+    } 100% {
+        top:100%;
+        opacity:0;
+    }
+}
+
