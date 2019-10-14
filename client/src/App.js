@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
 import './App.css';
 import * as THREE from 'three';
 import OBJLoader from 'three-obj-loader';
@@ -127,29 +128,35 @@ export class App extends Component {
 
 	render() {
 		return (
-			<React.Fragment>
-				<div className={styles.scene} ref={ref => (this.main = ref) }></div>
-				<div className={styles.document}>
-					<div className={styles.introductionContainer}>
-						<div className={styles.introduction}>
-							<FadeText heading={true} delay={0}>
-								We are You &amp; I - a digital product studio specialising in cutting edge product design &amp; development.
-							</FadeText>
-							<FadeText delay={1}>
-								Our goal is to build emotive and memorable digital experiences which stimulate discussion.
-							</FadeText>
+			<ParallaxProvider>
+				<React.Fragment>
+					<div className={styles.scene} ref={ref => (this.main = ref) }></div>
+					<div className={styles.document}>
+						<div className={styles.introductionContainer}>
+							<div className={styles.introduction}>
+								<Parallax y={[30, 0]}>
+									<FadeText heading={true} delay={0}>
+										We are You &amp; I - a digital product studio specialising in cutting edge product design &amp; development.
+									</FadeText>
+								</Parallax>
+								<FadeText delay={1}>
+									Our goal is to build emotive and memorable digital experiences which stimulate discussion.
+								</FadeText>
+							</div>
+							<div className={styles.scrollPrompt}>
+									<div className={styles.scrollContainer}>
+										<span className={styles.scrollPoint}></span>
+									</div>
+							</div>
 						</div>
-						<div className={styles.scrollPrompt}>
-								<div className={styles.scrollContainer}>
-									<span className={styles.scrollPoint}></span>
-								</div>
+						<div className={styles.projectsContainer}>
+							<Parallax y={[-100, 20]}>
+								<h1>Projects</h1>
+							</Parallax>
 						</div>
 					</div>
-					<div className={styles.projectsContainer}>
-						<h1>Projects</h1>
-					</div>
-				</div>
-			</React.Fragment>
+				</React.Fragment>
+			</ParallaxProvider>
 		);
  	}
 }
