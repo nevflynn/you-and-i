@@ -21,6 +21,11 @@ export class App extends Component {
 		this.sceneSetup();
     	this.addCustomSceneObjects();
 		this.startAnimationLoop();
+		document.addEventListener('scroll', this.trackScrolling);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('scroll', this.trackScrolling);
 	}
 	
 	sceneSetup = () => {
@@ -124,6 +129,11 @@ export class App extends Component {
 		)
 	}
 
+	trackScrolling = () => {
+		console.log('hi');
+		console.log(window.scrollY);
+	  };
+
 	
 
 	render() {
@@ -134,14 +144,16 @@ export class App extends Component {
 					<div className={styles.document}>
 						<div className={styles.introductionContainer}>
 							<div className={styles.introduction}>
-								<Parallax y={[30, 0]}>
+								<Parallax y={[60, -40]}>
 									<FadeText heading={true} delay={0}>
 										We are You &amp; I - a digital product studio specialising in cutting edge product design &amp; development.
 									</FadeText>
 								</Parallax>
-								<FadeText delay={1}>
-									Our goal is to build emotive and memorable digital experiences which stimulate discussion.
-								</FadeText>
+								<Parallax y={[0, 80]}>
+									<FadeText delay={1}>
+										Our goal is to build emotive and memorable digital experiences which stimulate discussion.
+									</FadeText>
+								</Parallax>
 							</div>
 							<div className={styles.scrollPrompt}>
 									<div className={styles.scrollContainer}>
