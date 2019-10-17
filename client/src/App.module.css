@@ -2,13 +2,14 @@
 h1{
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-family: 'Roboto Mono', monospace;
+    /* font-family: 'Roboto Mono', monospace; */
+    font-family: 'Avenir';
     margin:0;
 
 }
 
 h3{
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Avenir';
     font-size:14pt;
 }
 
@@ -45,7 +46,7 @@ p{
 }
 
 .scrollPrompt{
-    position:absolute;
+    position:fixed;
     /* background:white; */
     width:100px;
     height:100px;
@@ -81,12 +82,23 @@ p{
     font-size:14pt;
 }
 
-.projectsContainer{
-    height:100vh;
+.blankContainer{
+    height:80vh;
     display:flex;
     justify-content: center;
     align-items: center;
 }
+
+.projectsContainer{
+    height:100vh;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    position: sticky;
+    padding:0 5%;
+    top: 0;
+}
+
 
 
 @keyframes scroll{

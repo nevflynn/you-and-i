@@ -1,0 +1,11 @@
+html{
+    background:#191f2a;
+}
+
+@font-face {
+    font-family: "Nev";
+    src: url(http://www.example.org/mycustomfont.ttf) format("truetype");
+}
+p.customfont { 
+    font-family: "My Custom Font", Verdana, Tahoma;
+}

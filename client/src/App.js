@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import './App.css';
 import * as THREE from 'three';
+import TWEEN from '@tweenjs/tween.js';
 import OBJLoader from 'three-obj-loader';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import styles from './App.module.css';
 import FadeText from './Components/FadeText/FadeText';
+import ProjectsMenu from './Components/ProjectsMenu/ProjectsMenu';
+
 OBJLoader(THREE);
 const lights = [];
 var model;
@@ -15,6 +19,9 @@ export class App extends Component {
 
 	state = {
 		phoneLoaded: false,
+		position: 0,
+		introOpacity: 1,
+		blurValue: 0
 	}
 
 	componentDidMount() {
@@ -40,6 +47,7 @@ export class App extends Component {
 		);
 		this.camera.position.z = 1.5;
 
+
 		this.renderer = new THREE.WebGLRenderer({antialias:true, aplha:true});
 		this.renderer.setSize( width, height );
 		this.main.appendChild( this.renderer.domElement );
@@ -56,24 +64,14 @@ export class App extends Component {
 	addCustomSceneObjects = () => {
 		this.addPhoneObject();
 		this.addLights();
-
-		// var planeTexture = new THREE.TextureLoader().load( './img/plane-bg.png' );
-		// var planeMaterial = new THREE.MeshBasicMaterial( { map: planeTexture, side:THREE.DoubleSide, transparent:true, opacity: .05 } );
-		
-		// const planeGeometry = new THREE.PlaneGeometry(2, 2, 2);
-		// var plane = new THREE.Mesh( planeGeometry, planeMaterial );
-		// plane.position.set(-1, 0, -2);
-		// this.scene.add( plane );
-
 	}
 
 	startAnimationLoop = () => {
-		if(this.state.phoneLoaded){
+		if(this.state.phoneLoaded && this.state.position === 0){
 			model.rotation.x += 0.01;
 			model.rotation.y += 0.01;
 		}
-
-
+		TWEEN.update();
 		this.composer.render();
 		requestAnimationFrame(this.startAnimationLoop);
 	}
@@ -130,9 +128,62 @@ export class App extends Component {
 	}
 
 	trackScrolling = () => {
-		console.log('hi');
-		console.log(window.scrollY);
-	  };
+		if(window.scrollY >= 0 && window.scrollY < 500){
+			this.setState({position:0});
+			this.fadeOutIntro();
+		} else if (window.scrollY >= 500 && window.scrollY < 600){
+			this.resetPhoneRotation();
+			this.setState({position:1});
+		} else if (window.scrollY >= 600){
+			console.log(window.scrollY);
+			this.setCamera();
+		}
+	};
+
+	fadeOutIntro = () => {
+		let blurValue = window.scrollY*.01;
+		let y = window.scrollY;
+		let introOpacity = (-1/500)*y + 1;
+		this.setState({introOpacity:introOpacity, blurValue: blurValue});
+	}
+
+	setCamera = () => {
+		// this.camera.position.z -= .002;
+	}
+
+	resetPhoneRotation = () => {
+		if(this.state.position === 1){
+			return;
+		}
+		disableBodyScroll();
+		let targetAngle;
+		let anglexMod = model.rotation.x % 6.28;
+		let angleyMod = model.rotation.y % 6.28;
+		
+		//Below 1.57 = 0 | Between 1.57 and 4.71 = 3.14 | Above 4.71 = 6.28
+		if(anglexMod < 3.14){
+			targetAngle = 3.14;
+		} else {
+			targetAngle = 6.28;
+		}
+
+
+		var position = { angley: angleyMod, anglex: anglexMod };
+		var target = { angley: targetAngle, anglex: targetAngle };
+		var tween = new TWEEN.Tween(position).to(target, 2000);
+
+		tween.easing(TWEEN.Easing.Sinusoidal.Out);
+		tween.onUpdate(function(){
+			model.rotation.y = position.angley;
+			model.rotation.x = position.anglex;
+		});
+		
+		tween.onComplete(() => {
+			clearAllBodyScrollLocks();
+		});
+
+		tween.start();
+	}
 
 	
 
@@ -143,7 +194,7 @@ export class App extends Component {
 					<div className={styles.scene} ref={ref => (this.main = ref) }></div>
 					<div className={styles.document}>
 						<div className={styles.introductionContainer}>
-							<div className={styles.introduction}>
+							<div className={styles.introduction} style={{opacity: this.state.introOpacity, filter: `blur(${this.state.blurValue}px)`}}>
 								<Parallax y={[60, -40]}>
 									<FadeText heading={true} delay={0}>
 										We are You &amp; I - a digital product studio specialising in cutting edge product design &amp; development.
@@ -151,20 +202,20 @@ export class App extends Component {
 								</Parallax>
 								<Parallax y={[0, 80]}>
 									<FadeText delay={1}>
-										Our goal is to build emotive and memorable digital experiences which stimulate discussion.
+										Our aim is to build emotive and memorable digital experiences which stimulate discussion.
 									</FadeText>
 								</Parallax>
 							</div>
-							<div className={styles.scrollPrompt}>
+							<div className={styles.scrollPrompt} style={{opacity: this.state.introOpacity, filter: `blur(${this.state.blurValue}px)`}}>
 									<div className={styles.scrollContainer}>
 										<span className={styles.scrollPoint}></span>
 									</div>
 							</div>
 						</div>
-						<div className={styles.projectsContainer}>
-							<Parallax y={[-100, 20]}>
-								<h1>Projects</h1>
-							</Parallax>
+						<div className={styles.blankContainer}>
+						</div>
+						<ProjectsMenu></ProjectsMenu>
+						<div className={styles.blankContainer}>
 						</div>
 					</div>
 				</React.Fragment>
